@@ -1,12 +1,6 @@
-function generateSparceMatrix(rows, columns, density)
-  sparcematrix = sprand(rows, columns, density)
-  fullmatrix = full(sparcematrix)
-  return fullmatrix
-end
-
 function powerMethod(matrix)
     x0 = ones(size(matrix, 1) , 1)
-    power = x0/ norm(x0)
+    power = x0 #/ norm(x0)
 
     for i=1:(10000)
       y = matrix * power
@@ -14,10 +8,9 @@ function powerMethod(matrix)
       lam = power' * y
       newPower = y / norm(y)
       normr = norm(y - newPower * lam)
-      if normr/lam[1] < 1.0e-8 #1.0e-8
+      if normr/lam[1] < 1.0e-8
         @show i
-
-        return newPower #dot(newPower, power)
+        return sparse(newPower)
       end
       power = newPower
     end
@@ -25,31 +18,18 @@ function powerMethod(matrix)
     return [0]
   end
 
-function normalizedEig(matrix)
-    @show values, vectors = eigs(matrix)
-    @printf("\nHI\n")
-  @show   max = maximum(values)
-    index = findfirst(values, max)
-    return vectors[index,:]
+#function inefficientPower(fullMat)
+#    x =(fullMat)^10 * rand(100,1)
+#    x = x / norm(x)
+#    return x/ minimum(findnz(abs(x))[3])
+#end
 
-end
-
-function inefficientPower(fullMat)
-    x =(fullMat)^10 * rand(100,1)
-    x = x / norm(x)
-    return x/ minimum(findnz(abs(x))[3])
-end
-
-fullMat = generateSparceMatrix(1000, 1000, .0009)
-#fullMat = 1000.*fullMat
-#fullMat = [2 -12; 1 -5]
- dominantEigenvector = powerMethod(sparse(fullMat)) #sparse(powerMethod(fullMat, 5 ))
- @show sparse(dominantEigenvector)
+matrix = sprand(1000, 1000, .0005)
+dominantEigenvector = powerMethod(matrix)
+@show dominantEigenvector
 #@show inefficientPower(fullMat)
 println("\n\n")
 if dominantEigenvector != [0]
-  allEigenvectors = eigvecs(fullMat)
- @show sparse(allEigenvectors)
-#  @show normalizedEig(fullMat)
-
+  allEigenvectors = eigvecs(full(matrix))
+  @show sparse(allEigenvectors)
 end
