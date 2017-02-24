@@ -7,7 +7,7 @@ function powerMethod(matrix)
 
       lam = power' * y
       newPower = y / norm(y)
-      normr = norm(y - newPower * lam)
+      normr = norm(y - power * lam )
       if normr/lam[1] < 1.0e-8
         @show i
         return sparse(newPower)
