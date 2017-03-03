@@ -6,13 +6,12 @@ function powerMethod(matrix)
       y = matrix * power
 
       lam = power' * y
-      newPower = y / norm(y)
-      normr = norm(y - newPower * lam)
+      normr = norm(y - power * lam)
       if normr/lam[1] < 1.0e-8
         #do something to run again.
-        return sparse(newPower), norm(y)
+        return sparse(transpose(y/ norm(y))), dot((matrix * y), y)/dot(y,y)
       end
-      power = newPower
+      power = y / norm(y)
     end
     @printf("Doesnt converge quickly enough\n")
     return [0], norm(power)
@@ -24,22 +23,27 @@ function powerMethod(matrix)
 #    return x/ minimum(findnz(abs(x))[3])
 #end
 
-#matrix = sprand(10, 10, .1)
-@show matrix = [11 -6  4 -2 ; 4 1 0 0 ; -9 9 -6 5 ; -6 6 -6 7]
+#@show matrix = sprand(10, 10, .2)
+@show matrix = [11 -6 4 -2; 4 1 0 0; -9 9 -6 5; -6 6 -6 7]
+
 dominantEigenvector, dominantEigenvalue = powerMethod(matrix)
 @show dominantEigenvector
 @show dominantEigenvalue
 #@show inefficientPower(fullMat)
-@show eigs(matrix)
-println("\n\n")
+
+println("\n")
 if dominantEigenvector != [0]
-  @show matrix[1, :]'
-  @show x = 1/(dominantEigenvalue*dominantEigenvector[1]) * matrix[1, :]'
-  @show deflatedMatrix = matrix - dominantEigenvalue * dominantEigenvector * x
-  @show eigVecTwo, eigValTwo = powerMethod(deflatedMatrix)
-  @show (eigValTwo - dominantEigenvalue)*eigVecTwo + dominantEigenvalue * (x * eigVecTwo)*dominantEigenvector
+  x = 1/(dominantEigenvalue*dominantEigenvector[1]) * transpose(matrix[1, :])
+  sparse(transpose(x))
+  deflatedMatrix = matrix - dominantEigenvalue  * transpose(dominantEigenvector) * x
+  eigVecTwo, eigValTwo = powerMethod(deflatedMatrix[2:end, 2:end])
+  @show eigVecTwo = transpose(cat(1, [0], transpose(eigVecTwo)))
+  eigVecTwo =  (eigValTwo - dominantEigenvalue)*eigVecTwo + dominantEigenvalue * (x * transpose(eigVecTwo))*dominantEigenvector
   @show eigValTwo
-  allEigenvectors = eigvecs(full(matrix))
-  @show sparse(allEigenvectors)
-  @show eigs(matrix)[1]
+  @show eigVecTwo / norm(eigVecTwo)
+
+  println("\n")
+  @show eig(full(matrix))[1]
+  @show sparse(eig(full(matrix))[2])
+  #S@show eigs(matrix)
 end
