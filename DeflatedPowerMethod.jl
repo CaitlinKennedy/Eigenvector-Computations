@@ -9,7 +9,7 @@ function powerMethod(matrix)
       normr = norm(y - power * lam)
       if normr/lam[1] < 1.0e-8
         #do something to run again.
-        return sparse(transpose(y/ norm(y))), dot((matrix * y), y)/dot(y,y)
+        return sparse(y/ norm(y)), dot((matrix * y), y)/dot(y,y)
       end
       power = y / norm(y)
     end
@@ -17,33 +17,25 @@ function powerMethod(matrix)
     return [0], norm(power)
   end
 
-#function inefficientPower(fullMat)
-#    x =(fullMat)^10 * rand(100,1)
-#    x = x / norm(x)
-#    return x/ minimum(findnz(abs(x))[3])
-#end
-
-#@show matrix = sprand(10, 10, .2)
-@show matrix = [11 -6 4 -2; 4 1 0 0; -9 9 -6 5; -6 6 -6 7]
-
+n = 1000
+matrix = sprand(n, n, .05)
+matrix = matrix + matrix'
 dominantEigenvector, dominantEigenvalue = powerMethod(matrix)
-@show dominantEigenvector
-@show dominantEigenvalue
-#@show inefficientPower(fullMat)
+lam,v = eigs(matrix;nev=3)[1:2] # returns the largest 2 eigenvalues lambda vectors v
 
-println("\n")
-if dominantEigenvector != [0]
-  x = 1/(dominantEigenvalue*dominantEigenvector[1]) * transpose(matrix[1, :])
-  sparse(transpose(x))
-  deflatedMatrix = matrix - dominantEigenvalue  * transpose(dominantEigenvector) * x
-  eigVecTwo, eigValTwo = powerMethod(deflatedMatrix[2:end, 2:end])
-  @show eigVecTwo = transpose(cat(1, [0], transpose(eigVecTwo)))
-  eigVecTwo =  (eigValTwo - dominantEigenvalue)*eigVecTwo + dominantEigenvalue * (x * transpose(eigVecTwo))*dominantEigenvector
-  @show eigValTwo
-  @show eigVecTwo / norm(eigVecTwo)
+if length(dominantEigenvector) > 1
+  x = -dominantEigenvector
+  x[1] += 1.0
+  Q = eye(n) - 2*x*x'/(x'*x)[1]
+  B = (Q*matrix*Q')[2:end,2:end]
+  eigVecTwo, eigValTwo = powerMethod(B)
+  lamB, vB = eigs(B;nev=2)[1:2] # returns the largest 2 eigenvalues lambda vectors v
+  eigVecTwo = Q*[0.0; eigVecTwo]
+  @show abs(lam[1]-(dominantEigenvector'*matrix*dominantEigenvector)[1])
+  @show 1-abs(v[:, 1]'*dominantEigenvector) # should be close to 0
 
-  println("\n")
-  @show eig(full(matrix))[1]
-  @show sparse(eig(full(matrix))[2])
-  #S@show eigs(matrix)
+  print("\n\n")
+  @show abs(lam[2]-(eigVecTwo'*matrix*eigVecTwo)[1])
+  @show 1-abs(v[:, 2]'*eigVecTwo) # should be close to 0
+
 end
