@@ -1,0 +1,9 @@
+[Command: julia /Users/Caitlin/development/computeEig/DeflatedPowerMethod.jl]
+abs(lam[1] - (dominantEigenvector' * matrix * dominantEigenvector)[1]) = 5.329070518200751e-15
+1 - abs((v[:,1])' * dominantEigenvector) = [-2.22045e-16]
+
+
+abs(lam[2] - (eigVecTwo' * matrix * eigVecTwo)[1]) = 1.509903313490213e-14
+1 - abs((v[:,2])' * eigVecTwo) = [-4.44089e-16]
+lam = [10.7523,5.39984,-5.3512]
+[Finished in 11.719s]

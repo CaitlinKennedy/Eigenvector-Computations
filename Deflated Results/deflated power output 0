@@ -1,0 +1,18 @@
+[Command: julia /Users/Caitlin/development/computeEig/DeflatedPowerMethod.jl]
+matrix = [3 12;18 9] = [3 12; 18 9]
+dominantEigenvector =
+	[1, 1]  =  0.5547
+	[1, 2]  =  0.83205
+dominantEigenvalue = 21.00000000926102
+
+eigValTwo = -8.999999939803395
+eigVecTwo / norm(eigVecTwo) = [-0.707107 0.707107]
+
+
+(eig(full(matrix)))[1] = [-9.0,21.0]
+sparse((eig(full(matrix)))[2]) =
+	[1, 1]  =  -0.707107
+	[2, 1]  =  0.707107
+	[1, 2]  =  -0.5547
+	[2, 2]  =  -0.83205
+[Finished in 4.481s]

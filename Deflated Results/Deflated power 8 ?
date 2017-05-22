@@ -1,0 +1,16 @@
+[Command: julia /Users/Caitlin/development/computeEig/DeflatedPowerMethod.jl]
+dominantEigenvalue = 2.7366342836862403
+full(dominantEigenvector) = [0.362979; 0.831549; 0.420442]
+
+eigValTwo = -0.08413799208881619
+eigVecTwo / norm(eigVecTwo) = [-0.0202088; -0.444085; 0.895757]
+
+
+lam = [2.73663,-0.332249]
+v' = [0.362979 0.831549 0.420442; -0.613382 -0.126429 0.779601]
+WARNING: Adjusting nev from 6 to 2
+eigs(matrix) = ([2.73663,-0.332249],
+[0.362979 0.613382; 0.831549 0.126429; 0.420442 -0.779601],
+
+2,1,3,[0.0,0.0,0.0])
+[Finished in 8.687s]

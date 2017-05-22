@@ -1,0 +1,11 @@
+[Command: julia /Users/Caitlin/development/computeEig/DeflatedPowerMethod.jl]
+dominantEigenvalue = 2.0831570080213675
+full(dominantEigenvector) = [0.766068; 0.36516; 0.52896]
+
+eigValTwo = 0.6046723686134825
+eigVecTwo / norm(eigVecTwo) = [0.343872; 0.46244; -0.817252]
+
+
+lam = [2.08316,0.604672]
+v' = [0.766068 0.36516 0.52896; -0.343872 -0.46244 0.817252]
+[Finished in 8.649s]
