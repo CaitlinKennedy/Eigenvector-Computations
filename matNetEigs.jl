@@ -48,7 +48,6 @@ for name = 1:length(mats)
       @printf("\n\n")
 
     end
-
     allEigs[name, 1] = dominantEigenvalue
     allEigs[name, 2] = eigValTwo
   end
